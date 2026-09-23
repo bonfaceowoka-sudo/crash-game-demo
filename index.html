@@ -1,54 +1,367 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Crash Demo</title>
+<title>Crash Game Demo</title>
+
 <style>
-*{box-sizing:border-box}body{margin:0;background:#07111f;color:#fff;font-family:Arial,sans-serif}
-.wrap{max-width:480px;margin:auto;padding:16px}.brand{text-align:center;font-size:28px;font-weight:800;margin:10px 0 6px}
-.note{text-align:center;color:#9fb0c5;font-size:12px;margin-bottom:14px}
-.balance,.controls{background:#101e31;border:1px solid #223650;border-radius:14px;padding:14px;margin-bottom:12px}
-.balance{text-align:center}.balance span{display:block;color:#9fb0c5;font-size:12px}.balance strong{font-size:25px}
-.game{background:#0c1829;border:1px solid #223650;border-radius:18px;padding:18px;text-align:center}
-.mult{font-size:62px;font-weight:900;margin:35px 0 12px}.status{color:#9fb0c5;min-height:20px}
-.history{display:flex;gap:7px;overflow:auto;margin:14px 0}.history b{background:#16263b;padding:6px 9px;border-radius:8px;font-size:12px;white-space:nowrap}
-input{width:100%;padding:13px;border-radius:10px;border:1px solid #304763;background:#081322;color:#fff;font-size:16px;margin-bottom:9px}
-button{width:100%;padding:14px;border:0;border-radius:10px;font-size:16px;font-weight:800;cursor:pointer;margin-top:7px}
-.bet{background:#25c281;color:#06140e}.cash{background:#ffb020;color:#1a1100}.reset{background:#253a55;color:#fff}
-button:disabled{opacity:.45;cursor:not-allowed}.small{text-align:center;color:#71849b;font-size:11px;margin-top:14px;line-height:1.5}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:#080d18;
+  color:white;
+  font-family:Arial,sans-serif;
+}
+.wrap{
+  max-width:480px;
+  margin:auto;
+  padding:16px;
+}
+.brand{
+  text-align:center;
+  color:#20e0a0;
+  font-size:26px;
+  font-weight:900;
+  margin:10px 0 18px;
+}
+.balance{
+  background:#101827;
+  border:1px solid #263653;
+  padding:14px;
+  border-radius:12px;
+  text-align:center;
+}
+.balance span{
+  display:block;
+  font-size:28px;
+  font-weight:900;
+  margin-top:5px;
+}
+.game{
+  margin-top:14px;
+  background:#0c1424;
+  border:1px solid #263653;
+  border-radius:14px;
+  padding:18px;
+  text-align:center;
+}
+.mult{
+  font-size:58px;
+  font-weight:900;
+  margin:35px 0;
+  color:#20e0a0;
+}
+.status{
+  min-height:24px;
+  color:#9fb0c5;
+}
+.controls{
+  margin-top:14px;
+  background:#101827;
+  padding:14px;
+  border-radius:12px;
+}
+input,button{
+  width:100%;
+  padding:14px;
+  margin-top:8px;
+  border-radius:10px;
+  border:0;
+  font-size:16px;
+}
+input{
+  background:#182235;
+  color:white;
+}
+button{
+  background:#20e0a0;
+  color:#06140e;
+  font-weight:900;
+  cursor:pointer;
+}
+button:disabled{
+  opacity:.45;
+  cursor:not-allowed;
+}
+.cash{
+  background:#ffb020;
+  color:#1a1100;
+}
+.reset{
+  background:#253a55;
+  color:white;
+}
+.history{
+  margin-top:14px;
+  background:#101827;
+  border-radius:12px;
+  padding:14px;
+}
+.history h3{
+  margin:0 0 10px;
+}
+#historyList{
+  display:flex;
+  gap:7px;
+  overflow:auto;
+}
+.crash{
+  background:#291b1b;
+  color:#ff7777;
+  padding:8px 12px;
+  border-radius:8px;
+  white-space:nowrap;
+}
+.win{
+  background:#123329;
+  color:#20e0a0;
+}
+.note{
+  text-align:center;
+  color:#71849b;
+  font-size:11px;
+  margin-top:14px;
+}
 </style>
 </head>
+
 <body>
+
 <div class="wrap">
+
 <div class="brand">🚀 CRASH DEMO</div>
-<div class="note">Play-money prototype — no deposits or withdrawals</div>
-<div class="balance"><span>VIRTUAL BALANCE</span><strong id="balance">KSh 1,000.00</strong></div>
-<div class="game"><div id="mult" class="mult">1.00×</div><div id="status" class="status">Place a virtual bet to start</div><div class="history" id="history"></div></div>
+
+<div class="balance">
+Demo Balance
+<span id="balance">1000.00</span>
+</div>
+
+<div class="game">
+
+<div class="mult" id="mult">1.00x</div>
+
+<div class="status" id="status">
+Place your demo bet to start
+</div>
+
+</div>
+
 <div class="controls">
-<input id="stake" type="number" min="10" step="10" value="100" placeholder="Virtual stake">
-<button class="bet" id="betBtn">PLACE VIRTUAL BET</button>
-<button class="cash" id="cashBtn" disabled>CASH OUT</button>
-<button class="reset" id="resetBtn">RESET DEMO BALANCE</button>
+
+<label>Demo Bet Amount</label>
+
+<input
+id="bet"
+type="number"
+min="1"
+value="50"
+>
+
+<button id="start" onclick="startGame()">
+🚀 START ROUND
+</button>
+
+<button
+id="cash"
+class="cash"
+onclick="cashOut()"
+disabled
+>
+💰 CASH OUT
+</button>
+
+<button
+class="reset"
+onclick="resetGame()"
+>
+RESET DEMO
+</button>
+
 </div>
-<div class="small">Virtual credits only. No payment services, deposits, withdrawals, or real-money betting are connected.</div>
+
+<div class="history">
+
+<h3>Recent Crashes</h3>
+
+<div id="historyList"></div>
+
 </div>
+
+<div class="note">
+DEMO GAME — NO REAL MONEY OR REAL BETTING
+</div>
+
+</div>
+
 <script>
-let balance=1000,running=false,cashed=false,stake=0,mult=1,crash=0,timer=null;
-const $=id=>document.getElementById(id);
-const money=n=>"KSh "+n.toFixed(2);
-function render(){$("balance").textContent=money(balance);$("mult").textContent=mult.toFixed(2)+"×"}
-function randomCrash(){return Math.max(1.01,+(1/(1-Math.random()*0.94)).toFixed(2))}
-function addHistory(v){let b=document.createElement("b");b.textContent=v.toFixed(2)+"×";$("history").prepend(b);while($("history").children.length>8)$("history").lastChild.remove()}
-function start(){
- stake=Number($("stake").value);
- if(!stake||stake<10||stake>balance){$("status").textContent="Enter a valid virtual stake.";return}
- balance-=stake;running=true;cashed=false;mult=1;crash=randomCrash();
- $("betBtn").disabled=true;$("cashBtn").disabled=false;$("stake").disabled=true;$("status").textContent="Round running…";render();
- timer=setInterval(()=>{mult=+(mult+Math.max(.012,mult*.012)).toFixed(2);if(mult>=crash){mult=crash;endCrash()}render()},80)
+
+let balance = 1000;
+let multiplier = 1;
+let crashPoint = 0;
+let timer = null;
+let running = false;
+let betAmount = 0;
+
+const balanceEl = document.getElementById("balance");
+const multEl = document.getElementById("mult");
+const statusEl = document.getElementById("status");
+const betEl = document.getElementById("bet");
+const startBtn = document.getElementById("start");
+const cashBtn = document.getElementById("cash");
+const historyList = document.getElementById("historyList");
+
+function updateBalance(){
+  balanceEl.textContent = balance.toFixed(2);
 }
-function cashOut(){if(!running||cashed)return;let payout=stake*mult;balance+=payout;cashed=true;running=false;clearInterval(timer);$("cashBtn").disabled=true;$("betBtn").disabled=false;$("stake").disabled=false;$("status").textContent="Cashed out for "+money(payout);addHistory(mult);render()}
-function endCrash(){running=false;clearInterval(timer);$("cashBtn").disabled=true;$("betBtn").disabled=false;$("stake").disabled=false;$("status").textContent="💥 CRASHED — virtual stake lost";addHistory(mult);render()}
-$("betBtn").onclick=start;$("cashBtn").onclick=cashOut;$("resetBtn").onclick=()=>{clearInterval(timer);balance=1000;running=false;cashed=false;mult=1;$("betBtn").disabled=false;$("cashBtn").disabled=true;$("stake").disabled=false;$("status").textContent="Place a virtual bet to start";render()};render();
+
+function randomCrash(){
+  return +(1.05 + Math.random() * 8.95).toFixed(2);
+}
+
+function startGame(){
+
+  if(running) return;
+
+  betAmount = Number(betEl.value);
+
+  if(betAmount <= 0){
+    statusEl.textContent = "Enter a valid demo bet.";
+    return;
+  }
+
+  if(betAmount > balance){
+    statusEl.textContent = "Not enough demo balance.";
+    return;
+  }
+
+  balance -= betAmount;
+  updateBalance();
+
+  multiplier = 1;
+  crashPoint = randomCrash();
+  running = true;
+
+  multEl.textContent = "1.00x";
+  multEl.style.color = "#20e0a0";
+
+  statusEl.textContent = "Round running...";
+
+  startBtn.disabled = true;
+  betEl.disabled = true;
+  cashBtn.disabled = false;
+
+  timer = setInterval(runGame,100);
+}
+
+function runGame(){
+
+  multiplier += 0.01 + multiplier * 0.006;
+
+  multEl.textContent = multiplier.toFixed(2) + "x";
+
+  if(multiplier >= crashPoint){
+    crash();
+  }
+}
+
+function cashOut(){
+
+  if(!running) return;
+
+  const winnings = betAmount * multiplier;
+
+  balance += winnings;
+  updateBalance();
+
+  running = false;
+  clearInterval(timer);
+
+  statusEl.textContent =
+    "Cashed out at " + multiplier.toFixed(2) + "x";
+
+  multEl.style.color = "#20e0a0";
+
+  addHistory(
+    "✓ " + multiplier.toFixed(2) + "x",
+    true
+  );
+
+  finishRound();
+}
+
+function crash(){
+
+  running = false;
+  clearInterval(timer);
+
+  multEl.textContent =
+    "💥 " + crashPoint.toFixed(2) + "x";
+
+  multEl.style.color = "#ff5555";
+
+  statusEl.textContent =
+    "CRASHED at " + crashPoint.toFixed(2) + "x";
+
+  addHistory(
+    "💥 " + crashPoint.toFixed(2) + "x",
+    false
+  );
+
+  finishRound();
+}
+
+function finishRound(){
+
+  startBtn.disabled = false;
+  betEl.disabled = false;
+  cashBtn.disabled = true;
+}
+
+function addHistory(text,win){
+
+  const item = document.createElement("div");
+
+  item.className =
+    win ? "crash win" : "crash";
+
+  item.textContent = text;
+
+  historyList.prepend(item);
+
+  while(historyList.children.length > 10){
+    historyList.removeChild(
+      historyList.lastChild
+    );
+  }
+}
+
+function resetGame(){
+
+  clearInterval(timer);
+
+  balance = 1000;
+  multiplier = 1;
+  running = false;
+
+  updateBalance();
+
+  multEl.textContent = "1.00x";
+  multEl.style.color = "#20e0a0";
+
+  statusEl.textContent =
+    "Place your demo bet to start";
+
+  startBtn.disabled = false;
+  betEl.disabled = false;
+  cashBtn.disabled = true;
+
+  historyList.innerHTML = "";
+}
+
+updateBalance();
+
 </script>
-</body></html>
+
+</body>
+</html>
