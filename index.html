@@ -429,8 +429,7 @@ function drawGraph(){
 
   points.forEach((value,i)=>{
 
-    const x=
-      (i/(points.length-1))*(w-20)+10;
+    const x=Math.min(10+i*4,w-20);
 
     const y=
       h-
