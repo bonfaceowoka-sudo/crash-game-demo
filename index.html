@@ -9,173 +9,201 @@
 *{box-sizing:border-box}
 
 body{
-  margin:0;
-  background:#080d18;
-  color:white;
-  font-family:Arial,sans-serif;
+margin:0;
+background:#060b14;
+color:white;
+font-family:Arial,sans-serif;
 }
 
 .wrap{
-  max-width:480px;
-  margin:auto;
-  padding:16px;
+max-width:480px;
+margin:auto;
+padding:16px;
 }
 
 .brand{
-  text-align:center;
-  color:#20e0a0;
-  font-size:28px;
-  font-weight:900;
-  margin:10px 0 18px;
+text-align:center;
+color:#20e0a0;
+font-size:28px;
+font-weight:900;
+margin:10px 0 18px;
+text-shadow:0 0 15px #20e0a0;
 }
 
 .balance{
-  background:#101827;
-  border:1px solid #263653;
-  padding:14px;
-  border-radius:14px;
-  text-align:center;
+background:#101827;
+border:1px solid #263653;
+padding:14px;
+border-radius:14px;
+text-align:center;
+box-shadow:0 0 20px #0008;
 }
 
 .balance span{
-  display:block;
-  font-size:28px;
-  font-weight:900;
-  margin-top:5px;
+display:block;
+font-size:28px;
+font-weight:900;
+margin-top:5px;
 }
 
 .game{
-  margin-top:14px;
-  background:#0c1424;
-  border:1px solid #263653;
-  border-radius:14px;
-  padding:14px;
-  text-align:center;
+margin-top:14px;
+background:#08111f;
+border:1px solid #263653;
+border-radius:14px;
+padding:14px;
+text-align:center;
+box-shadow:inset 0 0 30px #0008;
 }
 
 .mult{
-  font-size:58px;
-  font-weight:900;
-  margin:18px 0 8px;
-  color:#20e0a0;
+font-size:58px;
+font-weight:900;
+margin:18px 0 8px;
+color:#20e0a0;
+text-shadow:0 0 18px #20e0a0;
 }
 
 .status{
-  min-height:24px;
-  color:#9fb0c5;
-  margin-bottom:10px;
+min-height:24px;
+color:#9fb0c5;
+margin-bottom:10px;
 }
 
 .graphbox{
-  position:relative;
-  width:100%;
-  height:240px;
+position:relative;
+width:100%;
+height:240px;
+overflow:hidden;
+border-radius:12px;
 }
 
 #graph{
-  width:100%;
-  height:240px;
-  background:#09111f;
-  border-radius:12px;
-  border:1px solid #1e304d;
+width:100%;
+height:240px;
+background:
+radial-gradient(circle at center,#102039 0%,#09111f 70%);
+border-radius:12px;
+border:1px solid #1e304d;
 }
 
 #rocket{
-  position:absolute;
-  font-size:32px;
-  display:none;
-  transform:translate(-50%,-50%);
-  pointer-events:none;
-  filter:drop-shadow(0 0 8px #20e0a0);
-  z-index:2;
+position:absolute;
+font-size:34px;
+display:none;
+transform:translate(-50%,-50%);
+pointer-events:none;
+filter:
+drop-shadow(0 0 6px #20e0a0)
+drop-shadow(0 0 14px #20e0a0);
+z-index:3;
+}
+
+#rocket::after{
+content:"";
+position:absolute;
+width:35px;
+height:8px;
+right:20px;
+top:14px;
+background:linear-gradient(
+to left,
+#ffcc33,
+#ff6633,
+transparent
+);
+border-radius:50%;
+filter:blur(3px);
+z-index:-1;
 }
 
 .crashed{
-  animation:shake .35s infinite;
+animation:shake .12s infinite;
 }
 
 @keyframes shake{
-  0%{transform:translate(-50%,-50%) rotate(-8deg)}
-  50%{transform:translate(-50%,-50%) rotate(8deg)}
-  100%{transform:translate(-50%,-50%) rotate(-8deg)}
+0%{transform:translate(-50%,-50%) rotate(-8deg)}
+50%{transform:translate(-50%,-50%) rotate(8deg)}
+100%{transform:translate(-50%,-50%) rotate(-8deg)}
 }
 
 .controls{
-  margin-top:14px;
-  background:#101827;
-  padding:14px;
-  border-radius:12px;
+margin-top:14px;
+background:#101827;
+padding:14px;
+border-radius:12px;
 }
 
 input,button{
-  width:100%;
-  padding:14px;
-  margin-top:8px;
-  border-radius:10px;
-  border:0;
-  font-size:16px;
+width:100%;
+padding:14px;
+margin-top:8px;
+border-radius:10px;
+border:0;
+font-size:16px;
 }
 
 input{
-  background:#182235;
-  color:white;
+background:#182235;
+color:white;
 }
 
 button{
-  background:#20e0a0;
-  color:#06140e;
-  font-weight:900;
+background:#20e0a0;
+color:#06140e;
+font-weight:900;
+box-shadow:0 0 12px #20e0a044;
 }
 
 button:disabled{
-  opacity:.45;
+opacity:.45;
 }
 
 .cash{
-  background:#ffb020;
-  color:#1a1100;
+background:#ffb020;
+color:#1a1100;
 }
 
 .reset{
-  background:#253a55;
-  color:white;
+background:#253a55;
+color:white;
 }
 
 .history{
-  margin-top:14px;
-  background:#101827;
-  border-radius:12px;
-  padding:14px;
+margin-top:14px;
+background:#101827;
+border-radius:12px;
+padding:14px;
 }
 
 .history h3{
-  margin:0 0 10px;
+margin:0 0 10px;
 }
 
 #historyList{
-  display:flex;
-  gap:7px;
-  overflow:auto;
+display:flex;
+gap:7px;
+overflow:auto;
 }
 
 .crash{
-  background:#291b1b;
-  color:#ff7777;
-  padding:8px 12px;
-  border-radius:8px;
-  white-space:nowrap;
+background:#291b1b;
+color:#ff7777;
+padding:8px 12px;
+border-radius:8px;
+white-space:nowrap;
 }
 
 .win{
-  background:#123329;
-  color:#20e0a0;
+background:#123329;
+color:#20e0a0;
 }
 
 .note{
-  text-align:center;
-  color:#71849b;
-  font-size:11px;
-  margin-top:14px;
+text-align:center;
+color:#71849b;
+font-size:11px;
+margin-top:14px;
 }
 </style>
 </head>
@@ -278,317 +306,334 @@ const canvas=document.getElementById("graph");
 const ctx=canvas.getContext("2d");
 const rocket=document.getElementById("rocket");
 
-
 function resizeCanvas(){
 
-  const rect=canvas.getBoundingClientRect();
+const rect=canvas.getBoundingClientRect();
 
-  canvas.width=rect.width*window.devicePixelRatio;
-  canvas.height=rect.height*window.devicePixelRatio;
+canvas.width=rect.width*window.devicePixelRatio;
+canvas.height=rect.height*window.devicePixelRatio;
 
-  ctx.setTransform(
-    window.devicePixelRatio,
-    0,
-    0,
-    window.devicePixelRatio,
-    0,
-    0
-  );
+ctx.setTransform(
+window.devicePixelRatio,
+0,
+0,
+window.devicePixelRatio,
+0,
+0
+);
 
-  drawGraph();
+drawGraph();
+
 }
-
 
 function updateBalance(){
 
-  balanceEl.textContent=balance.toFixed(2);
+balanceEl.textContent=balance.toFixed(2);
 
 }
-
 
 function randomCrash(){
 
-  return +(1.05+Math.random()*8.95).toFixed(2);
+return +(1.05+Math.random()*8.95).toFixed(2);
 
 }
-
 
 function startGame(){
 
-  if(running)return;
+if(running)return;
 
-  betAmount=Number(betEl.value);
+betAmount=Number(betEl.value);
 
-  if(betAmount<=0){
+if(betAmount<=0){
 
-    statusEl.textContent="Enter a valid demo bet.";
-    return;
-
-  }
-
-  if(betAmount>balance){
-
-    statusEl.textContent="Not enough demo balance.";
-    return;
-
-  }
-
-  balance-=betAmount;
-  updateBalance();
-
-  multiplier=1;
-  crashPoint=randomCrash();
-
-  points=[1];
-
-  running=true;
-
-  multEl.textContent="1.00x";
-  multEl.style.color="#20e0a0";
-
-  statusEl.textContent="Round running...";
-
-  startBtn.disabled=true;
-  betEl.disabled=true;
-  cashBtn.disabled=false;
-
-  rocket.style.display="block";
-  rocket.classList.remove("crashed");
-
-  drawGraph();
-
-  timer=setInterval(runGame,100);
+statusEl.textContent="Enter a valid demo bet.";
+return;
 
 }
 
+if(betAmount>balance){
+
+statusEl.textContent="Not enough demo balance.";
+return;
+
+}
+
+balance-=betAmount;
+updateBalance();
+
+multiplier=1;
+crashPoint=randomCrash();
+
+points=[1];
+
+running=true;
+
+multEl.textContent="1.00x";
+multEl.style.color="#20e0a0";
+
+statusEl.textContent="Round running...";
+
+startBtn.disabled=true;
+betEl.disabled=true;
+cashBtn.disabled=false;
+
+rocket.style.display="block";
+rocket.classList.remove("crashed");
+
+drawGraph();
+
+timer=setInterval(runGame,100);
+
+}
 
 function runGame(){
 
-  multiplier+=0.01+multiplier*0.006;
+multiplier+=0.01+multiplier*0.006;
 
-  points.push(multiplier);
+points.push(multiplier);
 
-  multEl.textContent=multiplier.toFixed(2)+"x";
+multEl.textContent=multiplier.toFixed(2)+"x";
 
-  drawGraph();
+drawGraph();
 
-  if(multiplier>=crashPoint){
+if(multiplier>=crashPoint){
 
-    crash();
-
-  }
+crash();
 
 }
 
+}
 
 function drawGraph(){
 
-  const w=canvas.clientWidth;
-  const h=canvas.clientHeight;
+const w=canvas.clientWidth;
+const h=canvas.clientHeight;
 
-  ctx.clearRect(0,0,w,h);
+ctx.clearRect(0,0,w,h);
 
-  /* Grid */
+/* Grid */
 
-  ctx.strokeStyle="#172943";
-  ctx.lineWidth=1;
+ctx.strokeStyle="#172943";
+ctx.lineWidth=1;
 
-  for(let x=0;x<w;x+=40){
+for(let x=0;x<w;x+=40){
 
-    ctx.beginPath();
-    ctx.moveTo(x,0);
-    ctx.lineTo(x,h);
-    ctx.stroke();
-
-  }
-
-  for(let y=0;y<h;y+=40){
-
-    ctx.beginPath();
-    ctx.moveTo(0,y);
-    ctx.lineTo(w,y);
-    ctx.stroke();
-
-  }
-
-  if(points.length<2){
-
-    rocket.style.left="10px";
-    rocket.style.top=(h-20)+"px";
-
-    return;
-
-  }
-
-  const maxValue=Math.max(2,...points)*1.15;
-
-  ctx.beginPath();
-
-  let lastX=10;
-  let lastY=h-10;
-
-  points.forEach((value,i)=>{
-
-    const x=Math.min(10+i*4,w-20);
-
-    const y=
-      h-
-      ((value-1)/(maxValue-1))*(h-20)-
-      10;
-
-    if(i===0){
-
-      ctx.moveTo(x,y);
-
-    }else{
-
-      ctx.lineTo(x,y);
-
-    }
-
-    lastX=x;
-    lastY=y;
-
-  });
-
-  ctx.strokeStyle="#20e0a0";
-  ctx.lineWidth=4;
-  ctx.lineJoin="round";
-  ctx.stroke();
-
-  /* Rocket position */
-
-  rocket.style.left=lastX+"px";
-  rocket.style.top=lastY+"px";
+ctx.beginPath();
+ctx.moveTo(x,0);
+ctx.lineTo(x,h);
+ctx.stroke();
 
 }
 
+for(let y=0;y<h;y+=40){
+
+ctx.beginPath();
+ctx.moveTo(0,y);
+ctx.lineTo(w,y);
+ctx.stroke();
+
+}
+
+if(points.length<2){
+
+rocket.style.left="10px";
+rocket.style.top=(h-20)+"px";
+
+return;
+
+}
+
+const maxValue=Math.max(2,...points)*1.15;
+
+ctx.beginPath();
+
+let lastX=10;
+let lastY=h-10;
+
+points.forEach((value,i)=>{
+
+const x=Math.min(10+i*4,w-20);
+
+const y=
+h-
+((value-1)/(maxValue-1)*(h-20))-
+10;
+
+if(i===0){
+
+ctx.moveTo(x,y);
+
+}else{
+
+ctx.lineTo(x,y);
+
+}
+
+lastX=x;
+lastY=y;
+
+});
+
+/* Glow */
+
+ctx.strokeStyle="#20e0a044";
+ctx.lineWidth=10;
+ctx.lineJoin="round";
+ctx.stroke();
+
+/* Main line */
+
+ctx.beginPath();
+
+points.forEach((value,i)=>{
+
+const x=Math.min(10+i*4,w-20);
+
+const y=
+h-
+((value-1)/(maxValue-1)*(h-20))-
+10;
+
+if(i===0){
+ctx.moveTo(x,y);
+}else{
+ctx.lineTo(x,y);
+}
+
+});
+
+ctx.strokeStyle="#20e0a0";
+ctx.lineWidth=4;
+ctx.lineJoin="round";
+ctx.stroke();
+
+/* Rocket */
+
+rocket.style.left=lastX+"px";
+rocket.style.top=lastY+"px";
+
+}
 
 function cashOut(){
 
-  if(!running)return;
+if(!running)return;
 
-  const winnings=betAmount*multiplier;
+const winnings=betAmount*multiplier;
 
-  balance+=winnings;
+balance+=winnings;
 
-  updateBalance();
+updateBalance();
 
-  running=false;
+running=false;
 
-  clearInterval(timer);
+clearInterval(timer);
 
-  statusEl.textContent=
-    "Cashed out at "+
-    multiplier.toFixed(2)+
-    "x";
+statusEl.textContent=
+"Cashed out at "+
+multiplier.toFixed(2)+
+"x";
 
-  multEl.style.color="#20e0a0";
+multEl.style.color="#20e0a0";
 
-  addHistory(
-    "✓ "+multiplier.toFixed(2)+"x",
-    true
-  );
+addHistory(
+"✓ "+multiplier.toFixed(2)+"x",
+true
+);
 
-  finishRound();
+finishRound();
 
 }
-
 
 function crash(){
 
-  running=false;
+running=false;
 
-  clearInterval(timer);
+clearInterval(timer);
 
-  multEl.textContent=
-    "💥 "+crashPoint.toFixed(2)+"x";
+multEl.textContent=
+"💥 "+crashPoint.toFixed(2)+"x";
 
-  multEl.style.color="#ff5555";
+multEl.style.color="#ff5555";
 
-  statusEl.textContent=
-    "CRASHED at "+
-    crashPoint.toFixed(2)+
-    "x";
+statusEl.textContent=
+"CRASHED at "+
+crashPoint.toFixed(2)+
+"x";
 
-  rocket.classList.add("crashed");
+rocket.classList.add("crashed");
 
-  addHistory(
-    "💥 "+crashPoint.toFixed(2)+"x",
-    false
-  );
+addHistory(
+"💥 "+crashPoint.toFixed(2)+"x",
+false
+);
 
-  finishRound();
+finishRound();
 
 }
-
 
 function finishRound(){
 
-  startBtn.disabled=false;
-  betEl.disabled=false;
-  cashBtn.disabled=true;
+startBtn.disabled=false;
+betEl.disabled=false;
+cashBtn.disabled=true;
 
 }
-
 
 function addHistory(text,win){
 
-  const item=document.createElement("div");
+const item=document.createElement("div");
 
-  item.className=win?
-    "crash win":
-    "crash";
+item.className=win?
+"crash win":
+"crash";
 
-  item.textContent=text;
+item.textContent=text;
 
-  historyList.prepend(item);
+historyList.prepend(item);
 
-  while(historyList.children.length>10){
+while(historyList.children.length>10){
 
-    historyList.removeChild(
-      historyList.lastChild
-    );
-
-  }
+historyList.removeChild(
+historyList.lastChild
+);
 
 }
 
+}
 
 function resetGame(){
 
-  clearInterval(timer);
+clearInterval(timer);
 
-  balance=1000;
-  multiplier=1;
-  running=false;
-  points=[];
+balance=1000;
+multiplier=1;
+running=false;
+points=[];
 
-  updateBalance();
+updateBalance();
 
-  multEl.textContent="1.00x";
-  multEl.style.color="#20e0a0";
+multEl.textContent="1.00x";
+multEl.style.color="#20e0a0";
 
-  statusEl.textContent=
-    "Place your demo bet to start";
+statusEl.textContent=
+"Place your demo bet to start";
 
-  startBtn.disabled=false;
-  betEl.disabled=false;
-  cashBtn.disabled=true;
+startBtn.disabled=false;
+betEl.disabled=false;
+cashBtn.disabled=true;
 
-  historyList.innerHTML="";
+historyList.innerHTML="";
 
-  rocket.style.display="none";
-  rocket.classList.remove("crashed");
+rocket.style.display="none";
+rocket.classList.remove("crashed");
 
-  drawGraph();
+drawGraph();
 
 }
 
-
 window.addEventListener(
-  "resize",
-  resizeCanvas
+"resize",
+resizeCanvas
 );
 
 updateBalance();
