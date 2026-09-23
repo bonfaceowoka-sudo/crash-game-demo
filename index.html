@@ -7,61 +7,80 @@
 
 <style>
 *{box-sizing:border-box}
+
 body{
   margin:0;
   background:#080d18;
   color:white;
   font-family:Arial,sans-serif;
 }
+
 .wrap{
   max-width:480px;
   margin:auto;
   padding:16px;
 }
+
 .brand{
   text-align:center;
   color:#20e0a0;
-  font-size:26px;
+  font-size:28px;
   font-weight:900;
   margin:10px 0 18px;
 }
+
 .balance{
   background:#101827;
   border:1px solid #263653;
   padding:14px;
-  border-radius:12px;
+  border-radius:14px;
   text-align:center;
 }
+
 .balance span{
   display:block;
   font-size:28px;
   font-weight:900;
   margin-top:5px;
 }
+
 .game{
   margin-top:14px;
   background:#0c1424;
   border:1px solid #263653;
   border-radius:14px;
-  padding:18px;
+  padding:14px;
   text-align:center;
 }
+
 .mult{
   font-size:58px;
   font-weight:900;
-  margin:35px 0;
+  margin:20px 0 10px;
   color:#20e0a0;
 }
+
 .status{
   min-height:24px;
   color:#9fb0c5;
+  margin-bottom:10px;
 }
+
+#graph{
+  width:100%;
+  height:230px;
+  background:#09111f;
+  border-radius:12px;
+  border:1px solid #1e304d;
+}
+
 .controls{
   margin-top:14px;
   background:#101827;
   padding:14px;
   border-radius:12px;
 }
+
 input,button{
   width:100%;
   padding:14px;
@@ -70,42 +89,49 @@ input,button{
   border:0;
   font-size:16px;
 }
+
 input{
   background:#182235;
   color:white;
 }
+
 button{
   background:#20e0a0;
   color:#06140e;
   font-weight:900;
-  cursor:pointer;
 }
+
 button:disabled{
   opacity:.45;
-  cursor:not-allowed;
 }
+
 .cash{
   background:#ffb020;
   color:#1a1100;
 }
+
 .reset{
   background:#253a55;
   color:white;
 }
+
 .history{
   margin-top:14px;
   background:#101827;
   border-radius:12px;
   padding:14px;
 }
+
 .history h3{
   margin:0 0 10px;
 }
+
 #historyList{
   display:flex;
   gap:7px;
   overflow:auto;
 }
+
 .crash{
   background:#291b1b;
   color:#ff7777;
@@ -113,10 +139,12 @@ button:disabled{
   border-radius:8px;
   white-space:nowrap;
 }
+
 .win{
   background:#123329;
   color:#20e0a0;
 }
+
 .note{
   text-align:center;
   color:#71849b;
@@ -144,6 +172,8 @@ Demo Balance
 <div class="status" id="status">
 Place your demo bet to start
 </div>
+
+<canvas id="graph"></canvas>
 
 </div>
 
@@ -203,163 +233,1034 @@ let timer = null;
 let running = false;
 let betAmount = 0;
 
-const balanceEl = document.getElementById("balance");
-const multEl = document.getElementById("mult");
-const statusEl = document.getElementById("status");
-const betEl = document.getElementById("bet");
-const startBtn = document.getElementById("start");
-const cashBtn = document.getElementById("cash");
-const historyList = document.getElementById("historyList");
+let points = [];
+
+const balanceEl =
+document.getElementById("balance");
+
+const multEl =
+document.getElementById("mult");
+
+const statusEl =
+document.getElementById("status");
+
+const betEl =
+document.getElementById("bet");
+
+const startBtn =
+document.getElementById("start");
+
+const cashBtn =
+document.getElementById("cash");
+
+const historyList =
+document.getElementById("historyList");
+
+const canvas =
+document.getElementById("graph");
+
+const ctx =
+canvas.getContext("2d");
+
+
+function resizeCanvas(){
+
+  const rect =
+  canvas.getBoundingClientRect();
+
+  canvas.width =
+  rect.width * window.devicePixelRatio;
+
+  canvas.height =
+  rect.height * window.devicePixelRatio;
+
+  ctx.scale(
+    window.devicePixelRatio,
+    window.devicePixelRatio
+  );
+
+  drawGraph();
+}
+
 
 function updateBalance(){
-  balanceEl.textContent = balance.toFixed(2);
+
+  balanceEl.textContent =
+  balance.toFixed(2);
+
 }
 
+
 function randomCrash(){
-  return +(1.05 + Math.random() * 8.95).toFixed(2);
+
+  return +(1.05 +
+    Math.random() * 8.95).toFixed(2);
+
 }
+
 
 function startGame(){
 
   if(running) return;
 
-  betAmount = Number(betEl.value);
+  betAmount =
+  Number(betEl.value);
 
   if(betAmount <= 0){
-    statusEl.textContent = "Enter a valid demo bet.";
+
+    statusEl.textContent =
+    "Enter a valid demo bet.";
+
     return;
   }
 
   if(betAmount > balance){
-    statusEl.textContent = "Not enough demo balance.";
+
+    statusEl.textContent =
+    "Not enough demo balance.";
+
     return;
   }
 
   balance -= betAmount;
+
   updateBalance();
 
   multiplier = 1;
-  crashPoint = randomCrash();
+
+  crashPoint =
+  randomCrash();
+
+  points = [1];
+
   running = true;
 
-  multEl.textContent = "1.00x";
-  multEl.style.color = "#20e0a0";
+  multEl.textContent =
+  "1.00x";
 
-  statusEl.textContent = "Round running...";
+  multEl.style.color =
+  "#20e0a0";
+
+  statusEl.textContent =
+  "Round running...";
 
   startBtn.disabled = true;
+
   betEl.disabled = true;
+
   cashBtn.disabled = false;
 
-  timer = setInterval(runGame,100);
+  drawGraph();
+
+  timer =
+  setInterval(runGame,100);
+
 }
+
 
 function runGame(){
 
-  multiplier += 0.01 + multiplier * 0.006;
+  multiplier +=
+  0.01 + multiplier * 0.006;
 
-  multEl.textContent = multiplier.toFixed(2) + "x";
+  points.push(multiplier);
+
+  multEl.textContent =
+  multiplier.toFixed(2) + "x";
+
+  drawGraph();
 
   if(multiplier >= crashPoint){
+
     crash();
+
   }
+
 }
+
+
+function drawGraph(){
+
+  const w =
+  canvas.clientWidth;
+
+  const h =
+  canvas.clientHeight;
+
+  ctx.clearRect(0,0,w,h);
+
+  ctx.strokeStyle =
+  "#172943";
+
+  ctx.lineWidth = 1;
+
+  for(let x=0;x<w;x+=40){
+
+    ctx.beginPath();
+
+    ctx.moveTo(x,0);
+
+    ctx.lineTo(x,h);
+
+    ctx.stroke();
+
+  }
+
+  for(let y=0;y<h;y+=40){
+
+    ctx.beginPath();
+
+    ctx.moveTo(0,y);
+
+    ctx.lineTo(w,y);
+
+    ctx.stroke();
+
+  }
+
+  if(points.length < 2){
+
+    return;
+
+  }
+
+  const maxValue =
+  Math.max(
+    2,
+    ...points
+  ) * 1.15;
+
+  ctx.beginPath();
+
+  points.forEach((value,i)=>{
+
+    const x =
+    (i/(points.length-1)) * (w-20) + 10;
+
+    const y =
+    h - ((value-1)/(maxValue-1)) * (h-20) - 10;
+
+    if(i === 0){
+
+      ctx.moveTo(x,y);
+
+    }else{
+
+      ctx.lineTo(x,y);
+
+    }
+
+  });
+
+  ctx.strokeStyle =
+  "#20e0a0";
+
+  ctx.lineWidth = 4;
+
+  ctx.lineJoin = "round";
+
+  ctx.stroke();
+
+  const last =
+  points[points.length-1];
+
+  const x =
+  w-10;
+
+  const y =
+  h - ((last-1)/(maxValue-1)) * (h-20) - 10;
+
+  ctx.beginPath();
+
+  ctx.arc(x,y,6,0,Math.PI*2);
+
+  ctx.fillStyle =
+  "#ffffff";
+
+  ctx.fill();
+
+}
+
 
 function cashOut(){
 
   if(!running) return;
 
-  const winnings = betAmount * multiplier;
+  const winnings =
+  betAmount * multiplier;
 
   balance += winnings;
+
   updateBalance();
 
   running = false;
+
   clearInterval(timer);
 
   statusEl.textContent =
-    "Cashed out at " + multiplier.toFixed(2) + "x";
+  "Cashed out at " +
+  multiplier.toFixed(2) +
+  "x";
 
-  multEl.style.color = "#20e0a0";
+  multEl.style.color =
+  "#20e0a0";
 
   addHistory(
-    "✓ " + multiplier.toFixed(2) + "x",
+    "✓ " +
+    multiplier.toFixed(2) +
+    "x",
     true
   );
 
   finishRound();
+
 }
+
 
 function crash(){
 
   running = false;
+
   clearInterval(timer);
 
   multEl.textContent =
-    "💥 " + crashPoint.toFixed(2) + "x";
+  "💥 " +
+  crashPoint.toFixed(2) +
+  "x";
 
-  multEl.style.color = "#ff5555";
+  multEl.style.color =
+  "#ff5555";
 
   statusEl.textContent =
-    "CRASHED at " + crashPoint.toFixed(2) + "x";
+  "CRASHED at " +
+  crashPoint.toFixed(2) +
+  "x";
 
   addHistory(
-    "💥 " + crashPoint.toFixed(2) + "x",
+    "💥 " +
+    crashPoint.toFixed(2) +
+    "x",
     false
   );
 
   finishRound();
+
 }
+
 
 function finishRound(){
 
   startBtn.disabled = false;
+
   betEl.disabled = false;
+
   cashBtn.disabled = true;
+
 }
+
 
 function addHistory(text,win){
 
-  const item = document.createElement("div");
+  const item =
+  document.createElement("div");
 
   item.className =
-    win ? "crash win" : "crash";
+  win ? "crash win" : "crash";
 
   item.textContent = text;
 
   historyList.prepend(item);
 
-  while(historyList.children.length > 10){
+  while(
+    historyList.children.length > 10
+  ){
+
     historyList.removeChild(
       historyList.lastChild
     );
+
   }
+
 }
+
 
 function resetGame(){
 
   clearInterval(timer);
 
   balance = 1000;
+
   multiplier = 1;
+
   running = false;
+
+  points = [];
 
   updateBalance();
 
-  multEl.textContent = "1.00x";
-  multEl.style.color = "#20e0a0";
+  multEl.textContent =
+  "1.00x";
+
+  multEl.style.color =
+  "#20e0a0";
 
   statusEl.textContent =
-    "Place your demo bet to start";
+  "Place your demo bet to start";
 
   startBtn.disabled = false;
+
   betEl.disabled = false;
+
   cashBtn.disabled = true;
 
   historyList.innerHTML = "";
+
+  drawGraph();
+
 }
 
+
+window.addEventListener(
+  "resize",
+  resizeCanvas
+);
+
 updateBalance();
+
+resizeCanvas();
+
+</script>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Crash Game Demo</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  background:#080d18;
+  color:white;
+  font-family:Arial,sans-serif;
+}
+
+.wrap{
+  max-width:480px;
+  margin:auto;
+  padding:16px;
+}
+
+.brand{
+  text-align:center;
+  color:#20e0a0;
+  font-size:28px;
+  font-weight:900;
+  margin:10px 0 18px;
+}
+
+.balance{
+  background:#101827;
+  border:1px solid #263653;
+  padding:14px;
+  border-radius:14px;
+  text-align:center;
+}
+
+.balance span{
+  display:block;
+  font-size:28px;
+  font-weight:900;
+  margin-top:5px;
+}
+
+.game{
+  margin-top:14px;
+  background:#0c1424;
+  border:1px solid #263653;
+  border-radius:14px;
+  padding:14px;
+  text-align:center;
+}
+
+.mult{
+  font-size:58px;
+  font-weight:900;
+  margin:20px 0 10px;
+  color:#20e0a0;
+}
+
+.status{
+  min-height:24px;
+  color:#9fb0c5;
+  margin-bottom:10px;
+}
+
+#graph{
+  width:100%;
+  height:230px;
+  background:#09111f;
+  border-radius:12px;
+  border:1px solid #1e304d;
+}
+
+.controls{
+  margin-top:14px;
+  background:#101827;
+  padding:14px;
+  border-radius:12px;
+}
+
+input,button{
+  width:100%;
+  padding:14px;
+  margin-top:8px;
+  border-radius:10px;
+  border:0;
+  font-size:16px;
+}
+
+input{
+  background:#182235;
+  color:white;
+}
+
+button{
+  background:#20e0a0;
+  color:#06140e;
+  font-weight:900;
+}
+
+button:disabled{
+  opacity:.45;
+}
+
+.cash{
+  background:#ffb020;
+  color:#1a1100;
+}
+
+.reset{
+  background:#253a55;
+  color:white;
+}
+
+.history{
+  margin-top:14px;
+  background:#101827;
+  border-radius:12px;
+  padding:14px;
+}
+
+.history h3{
+  margin:0 0 10px;
+}
+
+#historyList{
+  display:flex;
+  gap:7px;
+  overflow:auto;
+}
+
+.crash{
+  background:#291b1b;
+  color:#ff7777;
+  padding:8px 12px;
+  border-radius:8px;
+  white-space:nowrap;
+}
+
+.win{
+  background:#123329;
+  color:#20e0a0;
+}
+
+.note{
+  text-align:center;
+  color:#71849b;
+  font-size:11px;
+  margin-top:14px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrap">
+
+<div class="brand">🚀 CRASH DEMO</div>
+
+<div class="balance">
+Demo Balance
+<span id="balance">1000.00</span>
+</div>
+
+<div class="game">
+
+<div class="mult" id="mult">1.00x</div>
+
+<div class="status" id="status">
+Place your demo bet to start
+</div>
+
+<canvas id="graph"></canvas>
+
+</div>
+
+<div class="controls">
+
+<label>Demo Bet Amount</label>
+
+<input
+id="bet"
+type="number"
+min="1"
+value="50"
+>
+
+<button id="start" onclick="startGame()">
+🚀 START ROUND
+</button>
+
+<button
+id="cash"
+class="cash"
+onclick="cashOut()"
+disabled
+>
+💰 CASH OUT
+</button>
+
+<button
+class="reset"
+onclick="resetGame()"
+>
+RESET DEMO
+</button>
+
+</div>
+
+<div class="history">
+
+<h3>Recent Crashes</h3>
+
+<div id="historyList"></div>
+
+</div>
+
+<div class="note">
+DEMO GAME — NO REAL MONEY OR REAL BETTING
+</div>
+
+</div>
+
+<script>
+
+let balance = 1000;
+let multiplier = 1;
+let crashPoint = 0;
+let timer = null;
+let running = false;
+let betAmount = 0;
+
+let points = [];
+
+const balanceEl =
+document.getElementById("balance");
+
+const multEl =
+document.getElementById("mult");
+
+const statusEl =
+document.getElementById("status");
+
+const betEl =
+document.getElementById("bet");
+
+const startBtn =
+document.getElementById("start");
+
+const cashBtn =
+document.getElementById("cash");
+
+const historyList =
+document.getElementById("historyList");
+
+const canvas =
+document.getElementById("graph");
+
+const ctx =
+canvas.getContext("2d");
+
+
+function resizeCanvas(){
+
+  const rect =
+  canvas.getBoundingClientRect();
+
+  canvas.width =
+  rect.width * window.devicePixelRatio;
+
+  canvas.height =
+  rect.height * window.devicePixelRatio;
+
+  ctx.scale(
+    window.devicePixelRatio,
+    window.devicePixelRatio
+  );
+
+  drawGraph();
+}
+
+
+function updateBalance(){
+
+  balanceEl.textContent =
+  balance.toFixed(2);
+
+}
+
+
+function randomCrash(){
+
+  return +(1.05 +
+    Math.random() * 8.95).toFixed(2);
+
+}
+
+
+function startGame(){
+
+  if(running) return;
+
+  betAmount =
+  Number(betEl.value);
+
+  if(betAmount <= 0){
+
+    statusEl.textContent =
+    "Enter a valid demo bet.";
+
+    return;
+  }
+
+  if(betAmount > balance){
+
+    statusEl.textContent =
+    "Not enough demo balance.";
+
+    return;
+  }
+
+  balance -= betAmount;
+
+  updateBalance();
+
+  multiplier = 1;
+
+  crashPoint =
+  randomCrash();
+
+  points = [1];
+
+  running = true;
+
+  multEl.textContent =
+  "1.00x";
+
+  multEl.style.color =
+  "#20e0a0";
+
+  statusEl.textContent =
+  "Round running...";
+
+  startBtn.disabled = true;
+
+  betEl.disabled = true;
+
+  cashBtn.disabled = false;
+
+  drawGraph();
+
+  timer =
+  setInterval(runGame,100);
+
+}
+
+
+function runGame(){
+
+  multiplier +=
+  0.01 + multiplier * 0.006;
+
+  points.push(multiplier);
+
+  multEl.textContent =
+  multiplier.toFixed(2) + "x";
+
+  drawGraph();
+
+  if(multiplier >= crashPoint){
+
+    crash();
+
+  }
+
+}
+
+
+function drawGraph(){
+
+  const w =
+  canvas.clientWidth;
+
+  const h =
+  canvas.clientHeight;
+
+  ctx.clearRect(0,0,w,h);
+
+  ctx.strokeStyle =
+  "#172943";
+
+  ctx.lineWidth = 1;
+
+  for(let x=0;x<w;x+=40){
+
+    ctx.beginPath();
+
+    ctx.moveTo(x,0);
+
+    ctx.lineTo(x,h);
+
+    ctx.stroke();
+
+  }
+
+  for(let y=0;y<h;y+=40){
+
+    ctx.beginPath();
+
+    ctx.moveTo(0,y);
+
+    ctx.lineTo(w,y);
+
+    ctx.stroke();
+
+  }
+
+  if(points.length < 2){
+
+    return;
+
+  }
+
+  const maxValue =
+  Math.max(
+    2,
+    ...points
+  ) * 1.15;
+
+  ctx.beginPath();
+
+  points.forEach((value,i)=>{
+
+    const x =
+    (i/(points.length-1)) * (w-20) + 10;
+
+    const y =
+    h - ((value-1)/(maxValue-1)) * (h-20) - 10;
+
+    if(i === 0){
+
+      ctx.moveTo(x,y);
+
+    }else{
+
+      ctx.lineTo(x,y);
+
+    }
+
+  });
+
+  ctx.strokeStyle =
+  "#20e0a0";
+
+  ctx.lineWidth = 4;
+
+  ctx.lineJoin = "round";
+
+  ctx.stroke();
+
+  const last =
+  points[points.length-1];
+
+  const x =
+  w-10;
+
+  const y =
+  h - ((last-1)/(maxValue-1)) * (h-20) - 10;
+
+  ctx.beginPath();
+
+  ctx.arc(x,y,6,0,Math.PI*2);
+
+  ctx.fillStyle =
+  "#ffffff";
+
+  ctx.fill();
+
+}
+
+
+function cashOut(){
+
+  if(!running) return;
+
+  const winnings =
+  betAmount * multiplier;
+
+  balance += winnings;
+
+  updateBalance();
+
+  running = false;
+
+  clearInterval(timer);
+
+  statusEl.textContent =
+  "Cashed out at " +
+  multiplier.toFixed(2) +
+  "x";
+
+  multEl.style.color =
+  "#20e0a0";
+
+  addHistory(
+    "✓ " +
+    multiplier.toFixed(2) +
+    "x",
+    true
+  );
+
+  finishRound();
+
+}
+
+
+function crash(){
+
+  running = false;
+
+  clearInterval(timer);
+
+  multEl.textContent =
+  "💥 " +
+  crashPoint.toFixed(2) +
+  "x";
+
+  multEl.style.color =
+  "#ff5555";
+
+  statusEl.textContent =
+  "CRASHED at " +
+  crashPoint.toFixed(2) +
+  "x";
+
+  addHistory(
+    "💥 " +
+    crashPoint.toFixed(2) +
+    "x",
+    false
+  );
+
+  finishRound();
+
+}
+
+
+function finishRound(){
+
+  startBtn.disabled = false;
+
+  betEl.disabled = false;
+
+  cashBtn.disabled = true;
+
+}
+
+
+function addHistory(text,win){
+
+  const item =
+  document.createElement("div");
+
+  item.className =
+  win ? "crash win" : "crash";
+
+  item.textContent = text;
+
+  historyList.prepend(item);
+
+  while(
+    historyList.children.length > 10
+  ){
+
+    historyList.removeChild(
+      historyList.lastChild
+    );
+
+  }
+
+}
+
+
+function resetGame(){
+
+  clearInterval(timer);
+
+  balance = 1000;
+
+  multiplier = 1;
+
+  running = false;
+
+  points = [];
+
+  updateBalance();
+
+  multEl.textContent =
+  "1.00x";
+
+  multEl.style.color =
+  "#20e0a0";
+
+  statusEl.textContent =
+  "Place your demo bet to start";
+
+  startBtn.disabled = false;
+
+  betEl.disabled = false;
+
+  cashBtn.disabled = true;
+
+  historyList.innerHTML = "";
+
+  drawGraph();
+
+}
+
+
+window.addEventListener(
+  "resize",
+  resizeCanvas
+);
+
+updateBalance();
+
+resizeCanvas();
 
 </script>
 
